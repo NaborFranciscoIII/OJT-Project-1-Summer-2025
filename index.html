@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>LCR Registration</title>
+</head>
+<body>
+    <div class="static-navbar">
+        <header>
+            <div class="logo"><h2>LCR Registration System</h2></div>
+            <nav class="navbar">
+                <a href="#home">Home</a>
+                <a href="#import">Import</a>
+                <a href="#form">Form</a>
+                <a href="#export">Export</a>
+            </nav>
+        </header>
+    </div>
+    <div class="section-content">
+        <section id="home" class="page"></section>
+        <section id="import" class="page">
+            <div class="excel-import">
+                <h2>Import your Spreadsheet File here:</h2>
+                <input class="import-file" type="file" accept=".xlsx,.xls,.csv">
+                <div class="import-button">Proceed to Forms</div>
+            </div>
+        </section>
+        <section id="form" class="page">
+            <div class="form-content">
+                <div class="form-container">
+                    <!-- 1. Base Fields -->
+                    <div class="form-row">
+                      <input type="text" placeholder="Document No." class="form-input" id="documentNo">
+                      <input type="text" placeholder="Register No." class="form-input" id="registerNo">
+                    </div>
+                  
+                    <!-- 2. Unique Column Dropdown -->
+                    <div class="form-row">
+                      <select id="categorySelector" class="form-input">
+                        <option value="received">Received</option>
+                        <option value="researched">Researched</option>
+                        <option value="recording">Recording</option>
+                        <option value="release">Release</option>
+                      </select>
+                    </div>
+                  
+                    <!-- 3. Sub Columns -->
+                    <div class="form-row">
+                      <input type="number" placeholder="Total Received" class="form-input" id="totalReceived">
+                      <input type="datetime-local" class="form-input" id="timeReceived">
+                      <input type="text" placeholder="Acted Upon" class="form-input" id="actedUpon">
+                      <input type="text" placeholder="Time Spent (Auto)" class="form-input" id="timeSpent" readonly>
+                    </div>
+                  
+                    <!-- 4. Action Buttons -->
+                    <div class="form-buttons">
+                      <button class="form-button" id="saveBtn">Save</button>
+                      <button class="form-button" id="clearBtn">Clear</button>
+                    </div>
+                  </div>
+                  
+            </div>
+        </section>
+        <section id="export" class="page">
+            <div class="excel-import">
+                <h2>Click below to export the updated file</h2>
+                <button class="import-button" id="downloadBtn">Download Excel</button>
+            </div>            
+        </section>
+    </div>
+    
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="libs/xlsx.full.min.js"></script>
+</body>
+</html>

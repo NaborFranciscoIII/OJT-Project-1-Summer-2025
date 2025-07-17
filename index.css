@@ -1,0 +1,206 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Tektur:wght@400..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    overflow: auto;
+    font-family: 'Roboto', sans-serif;
+}
+
+#home {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('image src/BG.jpg') no-repeat center/cover;
+}
+
+#import {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('image src/BG2.jpg') no-repeat center/cover;
+}
+#form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('image src/BG3.png') no-repeat center/cover;
+}
+#export {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('image src/BG4.jpg') no-repeat center/cover;
+}
+
+.static-navbar header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 100px;
+    color: black;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 60px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.8);
+
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.section-content {
+    position: absolute;
+    top: 0px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+.page {
+    height: 100vh;
+    padding: 40px;
+    color: white;
+    font-size: 24px;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 600;
+    color: #000;
+    text-decoration: none;
+    margin-right: 700px;
+}
+
+.navbar a{
+    position: relative;
+    color: black;
+    text-decoration: none;
+    padding-left: 16px;
+    margin: 0 20px;
+    font-size: 22px;
+    font-weight: 600;
+    align-items: center;
+    transition: color 0.3s ease;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.excel-import{
+    display: flex;
+    border-radius: 10px;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, .2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.import-button{
+    border-radius: 20px;
+    background-color: #f0f0f0;
+    color: #000;
+    padding: 10px;
+    max-width: 250px;
+    margin: auto;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.excel-import h2, input, .import-button{
+    margin: 20px;
+}
+
+.import-file{
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    border-radius: 10px;
+    padding: 10px;
+    color: #333;
+    cursor: pointer;
+}
+
+.import-button:hover{
+    background-color: rgb(173, 7, 173);
+    color: white;
+    transition: .3s ease-in-out;
+}
+
+/* Form Section  */
+
+.form-container {
+    backdrop-filter: blur(20px);
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 600px;
+    width: 90%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.form-input {
+    flex: 1;
+    min-width: 240px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.form-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    background-color: #4a4a4a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.form-button:hover {
+    background-color: rgb(173, 7, 173);
+}
