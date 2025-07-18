@@ -3,21 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
     <title>LCR Registration</title>
 </head>
 <body>
-    <div class="static-navbar">
-        <header>
-            <div class="logo"><h2>LCR Registration System</h2></div>
-            <nav class="navbar">
-                <a href="#home">Home</a>
-                <a href="#import">Import</a>
-                <a href="#form">Form</a>
-                <a href="#export">Export</a>
-            </nav>
-        </header>
-    </div>
+    <div class="icon-navbar">
+        <a href="#home" title="Home"><i class='bx bx-home'></i></a>
+        <a href="#import" title="Import"><i class='bx bx-import'></i></a>
+        <a href="#form" title="Form"><i class='bx bx-file'></i></a>
+        <a href="#export" title="Export"><i class='bx bx-export'></i></a>
+    </div>      
     <div class="section-content">
         <section id="home" class="page"></section>
         <section id="import" class="page">
@@ -30,28 +26,54 @@
         <section id="form" class="page">
             <div class="form-content">
                 <div class="form-container">
+                    <!-- Header -->
+                    <h2 style="color: black; font-family: 'Roboto', sans-serif; font-weight: 600; text-align: left;">
+                      Civil Registry Documents Registration
+                    </h2>
+                  
                     <!-- 1. Base Fields -->
-                    <div class="form-row">
-                      <input type="text" placeholder="Document No." class="form-input" id="documentNo">
-                      <input type="text" placeholder="Register No." class="form-input" id="registerNo">
+                    <div class="form-row black-theme">
+                      <div class="form-group">
+                        <span class="form-label">Document No.</span>
+                        <input type="text" id="documentNo" class="form-input" value="LCR-2025-001">
+                      </div>
+                      <div class="form-group">
+                        <span class="form-label">Register No.</span>
+                        <input type="text" id="registerNo" class="form-input" value="REG-145-A">
+                      </div>
                     </div>
                   
-                    <!-- 2. Unique Column Dropdown -->
-                    <div class="form-row">
-                      <select id="categorySelector" class="form-input">
-                        <option value="received">Received</option>
-                        <option value="researched">Researched</option>
-                        <option value="recording">Recording</option>
-                        <option value="release">Release</option>
-                      </select>
+                    <!-- 2. Category Selector -->
+                    <div class="form-row black-theme">
+                      <div class="form-group full-width">
+                        <span class="form-label">Select Phase</span>
+                        <select id="categorySelector" class="form-input">
+                          <option value="received">Received</option>
+                          <option value="researched">Researched</option>
+                          <option value="recording">Recording</option>
+                          <option value="release">Release</option>
+                        </select>
+                      </div>
                     </div>
                   
                     <!-- 3. Sub Columns -->
-                    <div class="form-row">
-                      <input type="number" placeholder="Total Received" class="form-input" id="totalReceived">
-                      <input type="datetime-local" class="form-input" id="timeReceived">
-                      <input type="text" placeholder="Acted Upon" class="form-input" id="actedUpon">
-                      <input type="text" placeholder="Time Spent (Auto)" class="form-input" id="timeSpent" readonly>
+                    <div class="form-row white-theme">
+                      <div class="form-group full-width">
+                        <span class="form-label">Total Received</span>
+                        <input type="number" id="totalReceived" class="form-input" value="5">
+                      </div>
+                      <div class="form-group full-width">
+                        <span class="form-label">Time Received</span>
+                        <input type="datetime-local" id="timeReceived" class="form-input">
+                      </div>
+                      <div class="form-group full-width">
+                        <span class="form-label">Acted Upon</span>
+                        <input type="text" id="actedUpon" class="form-input" value="Encoded by Officer in Charge">
+                      </div>
+                      <div class="form-group full-width">
+                        <span class="form-label">Time Spent</span>
+                        <input type="text" id="timeSpent" class="form-input" readonly value="00:35:12 Automatically Calculated">
+                      </div>
                     </div>
                   
                     <!-- 4. Action Buttons -->
@@ -60,7 +82,7 @@
                       <button class="form-button" id="clearBtn">Clear</button>
                     </div>
                   </div>
-                  
+                   
             </div>
         </section>
         <section id="export" class="page">

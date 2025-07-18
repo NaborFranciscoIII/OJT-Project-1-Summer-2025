@@ -72,3 +72,51 @@ document.getElementById('downloadBtn').addEventListener('click', function() {
 
     XLSX.writeFile(newWorkbook, 'updated_file.xlsx');
 });
+
+
+// Function for Icon Active State 
+
+document.addEventListener('DOMContentLoaded', function () {
+    const sectionContainer = document.querySelector('.section-content');
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.icon-navbar a');
+
+    sectionContainer.addEventListener('scroll', () => {
+        let current = '';
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+
+            if (sectionContainer.scrollTop >= sectionTop - 100 &&
+                sectionContainer.scrollTop < sectionTop + sectionHeight - 100) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active', 'active-home', 'active-import', 'active-form', 'active-export');
+
+            const href = link.getAttribute('href').substring(1); // remove #
+            if (href === current) {
+                link.classList.add('active');
+
+                // Custom active color class
+                switch (href) {
+                    case 'home':
+                        link.classList.add('active-home');
+                        break;
+                    case 'import':
+                        link.classList.add('active-import');
+                        break;
+                    case 'form':
+                        link.classList.add('active-form');
+                        break;
+                    case 'export':
+                        link.classList.add('active-export');
+                        break;
+                }
+            }
+        });
+    });
+});
