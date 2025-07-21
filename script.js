@@ -24,7 +24,9 @@ document.querySelector('.import-file').addEventListener('change', function(e) {
 // Display Form (populateForm)
 function populateForm(data) {
     const formContainer = document.querySelector('.form-content');
-    formContainer.innerHTML = '';
+    const oldTable = formContainer.querySelector('table');
+    if (oldTable) oldTable.remove(); // Only remove previous table, not static content
+
 
     const table = document.createElement('table');
     table.style.background = 'white';
@@ -67,10 +69,17 @@ document.getElementById('downloadBtn').addEventListener('click', function() {
     }
 
     const worksheet = XLSX.utils.aoa_to_sheet(data);
+    // Clone original workbook
     const newWorkbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(newWorkbook, worksheet, 'Sheet1');
+    workbook.SheetNames.forEach(name => {
+        XLSX.utils.book_append_sheet(newWorkbook, workbook.Sheets[name], name);
+});
 
-    XLSX.writeFile(newWorkbook, 'updated_file.xlsx');
+// Replace one specific sheet (e.g. Sheet1)
+XLSX.utils.book_append_sheet(newWorkbook, worksheet, 'Sheet1', true); // true = overwrite
+
+XLSX.writeFile(newWorkbook, 'updated_file.xlsx');
+
 });
 
 
@@ -119,4 +128,21 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+});
+
+
+// Clear Button Behavior 
+document.getElementById('clearBtn').addEventListener('click', () => {
+    const inputs = document.querySelectorAll('.form-input');
+    inputs.forEach(input => {
+        if (!input.hasAttribute('readonly')) {
+            input.value = '';
+        }
+    });
+
+    // Reset to defaults if needed
+    document.getElementById('documentNo').value = 'LCR-2025-001';
+    document.getElementById('registerNo').value = 'REG-145-A';
+    document.getElementById('categorySelector').selectedIndex = 0;
+    document.getElementById('timeSpent').value = '00:35:12 Automatically Calculated';
 });
