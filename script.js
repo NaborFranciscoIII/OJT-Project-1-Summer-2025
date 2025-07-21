@@ -21,38 +21,6 @@ document.querySelector('.import-file').addEventListener('change', function(e) {
     reader.readAsBinaryString(file);
 });
 
-// Display Form (populateForm)
-function populateForm(data) {
-    const formContainer = document.querySelector('.form-content');
-    const oldTable = formContainer.querySelector('table');
-    if (oldTable) oldTable.remove(); // Only remove previous table, not static content
-
-
-    const table = document.createElement('table');
-    table.style.background = 'white';
-    table.style.color = 'black';
-    table.style.borderCollapse = 'collapse';
-
-    data.forEach((row, rowIndex) => {
-        const tr = document.createElement('tr');
-        row.forEach((cell, colIndex) => {
-            const cellTag = rowIndex === 0 ? 'th' : 'td';
-            const cellElem = document.createElement(cellTag);
-
-            const input = document.createElement('input');
-            input.value = cell || '';
-            input.style.width = '100px';
-
-            cellElem.appendChild(input);
-            cellElem.style.border = '1px solid black';
-            tr.appendChild(cellElem);
-        });
-        table.appendChild(tr);
-    });
-
-    formContainer.appendChild(table);
-}
-
 
 // Export to Excel 
 document.getElementById('downloadBtn').addEventListener('click', function() {
