@@ -9,13 +9,6 @@ document.querySelector('.import-file').addEventListener('change', function(e) {
     reader.onload = function(e) {
         const data = e.target.result;
         workbook = XLSX.read(data, { type: 'binary' });
-
-        // Example: Show first sheet data in form
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-        populateForm(jsonData);
     };
 
     reader.readAsBinaryString(file);
@@ -24,31 +17,16 @@ document.querySelector('.import-file').addEventListener('change', function(e) {
 
 // Export to Excel 
 document.getElementById('downloadBtn').addEventListener('click', function () {
-    // Get input values
-    const documentNo = document.getElementById('documentNo').value;
-    const registerNo = document.getElementById('registerNo').value;
-    const phase = document.getElementById('categorySelector').value;
-    const totalReceived = document.getElementById('totalReceived').value;
-    const timeReceived = document.getElementById('timeReceived').value;
-    const actedUpon = document.getElementById('actedUpon').value;
-    const timeSpent = document.getElementById('timeSpent').value;
+    if (!workbook) {
+        alert("No workbook loaded.");
+        return;
+    }
 
-    // Create sheet data (row-by-row)
-    const sheetData = [
-        ['Document No.', 'Register No.', 'Phase', 'Total Received', 'Time Received', 'Acted Upon', 'Time Spent'],
-        [documentNo, registerNo, phase, totalReceived, timeReceived, actedUpon, timeSpent]
-    ];
-
-    const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'FormData');
     XLSX.writeFile(workbook, 'LCR_Export.xlsx');
 });
 
 
-
 // Function for Icon Active State 
-
 document.addEventListener('DOMContentLoaded', function () {
     const sectionContainer = document.querySelector('.section-content');
     const sections = document.querySelectorAll('section');
@@ -111,21 +89,15 @@ document.getElementById('clearBtn').addEventListener('click', () => {
     document.getElementById('timeSpent').value = '00:35:12 Automatically Calculated';
 });
 
+
 // Remove File Logic 
-// Select the file input and the remove button
 const fileInput = document.querySelector('.import-file');
 const removeFileBtn = document.getElementById('removeFileBtn');
 
-// Add a click event listener to the Remove File button
 removeFileBtn.addEventListener('click', function () {
-  fileInput.value = ''; // Clears the selected file
+    fileInput.value = ''; // Clears the selected file
 });
 
-// Replacement for populateForm() 
-reader.onload = function(e) {
-    const data = e.target.result;
-    workbook = XLSX.read(data, { type: 'binary' });
-};
 
 // Time Spent Automatic Calculation logic 
 function calculateTimeSpent() {
@@ -176,21 +148,17 @@ document.getElementById('saveBtn').addEventListener('click', () => {
 
     // Define where to save in sheet
     const headers = jsonData[0]; // assume first row = headers
-    let newRow = [docNo, regNo];
+    let newRow = new Array(16).fill('');
 
-    // Default columns (Document No., Register No.)
+    newRow[0] = docNo;
+    newRow[1] = regNo;
+
     const phaseIndex = {
         received: 2,
         researched: 6,
         recording: 10,
         release: 14
     };
-
-    // Fill empty phase columns
-    for (let i = 0; i < 16; i++) newRow[i] = '';
-
-    newRow[0] = docNo;
-    newRow[1] = regNo;
 
     const colOffset = phaseIndex[phase];
     newRow[colOffset] = total;
@@ -206,14 +174,4 @@ document.getElementById('saveBtn').addEventListener('click', () => {
     workbook.Sheets[sheetName] = newSheet;
 
     alert("Data saved to workbook in memory.");
-});
-
-// Export Logic fix 
-document.getElementById('downloadBtn').addEventListener('click', function () {
-    if (!workbook) {
-        alert("No workbook loaded.");
-        return;
-    }
-
-    XLSX.writeFile(workbook, 'LCR_Export.xlsx');
 });
