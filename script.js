@@ -23,32 +23,28 @@ document.querySelector('.import-file').addEventListener('change', function(e) {
 
 
 // Export to Excel 
-document.getElementById('downloadBtn').addEventListener('click', function() {
-    const table = document.querySelector('.form-content table');
-    const data = [];
+document.getElementById('downloadBtn').addEventListener('click', function () {
+    // Get input values
+    const documentNo = document.getElementById('documentNo').value;
+    const registerNo = document.getElementById('registerNo').value;
+    const phase = document.getElementById('categorySelector').value;
+    const totalReceived = document.getElementById('totalReceived').value;
+    const timeReceived = document.getElementById('timeReceived').value;
+    const actedUpon = document.getElementById('actedUpon').value;
+    const timeSpent = document.getElementById('timeSpent').value;
 
-    for (let row of table.rows) {
-        const rowData = [];
-        for (let cell of row.cells) {
-            const input = cell.querySelector('input');
-            rowData.push(input ? input.value : '');
-        }
-        data.push(rowData);
-    }
+    // Create sheet data (row-by-row)
+    const sheetData = [
+        ['Document No.', 'Register No.', 'Phase', 'Total Received', 'Time Received', 'Acted Upon', 'Time Spent'],
+        [documentNo, registerNo, phase, totalReceived, timeReceived, actedUpon, timeSpent]
+    ];
 
-    const worksheet = XLSX.utils.aoa_to_sheet(data);
-    // Clone original workbook
-    const newWorkbook = XLSX.utils.book_new();
-    workbook.SheetNames.forEach(name => {
-        XLSX.utils.book_append_sheet(newWorkbook, workbook.Sheets[name], name);
+    const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'FormData');
+    XLSX.writeFile(workbook, 'LCR_Export.xlsx');
 });
 
-// Replace one specific sheet (e.g. Sheet1)
-XLSX.utils.book_append_sheet(newWorkbook, worksheet, 'Sheet1', true); // true = overwrite
-
-XLSX.writeFile(newWorkbook, 'updated_file.xlsx');
-
-});
 
 
 // Function for Icon Active State 
@@ -114,3 +110,19 @@ document.getElementById('clearBtn').addEventListener('click', () => {
     document.getElementById('categorySelector').selectedIndex = 0;
     document.getElementById('timeSpent').value = '00:35:12 Automatically Calculated';
 });
+
+// Remove File Logic 
+// Select the file input and the remove button
+const fileInput = document.querySelector('.import-file');
+const removeFileBtn = document.getElementById('removeFileBtn');
+
+// Add a click event listener to the Remove File button
+removeFileBtn.addEventListener('click', function () {
+  fileInput.value = ''; // Clears the selected file
+});
+
+// Replacement for populateForm() 
+reader.onload = function(e) {
+    const data = e.target.result;
+    workbook = XLSX.read(data, { type: 'binary' });
+};
