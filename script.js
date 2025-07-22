@@ -126,3 +126,94 @@ reader.onload = function(e) {
     const data = e.target.result;
     workbook = XLSX.read(data, { type: 'binary' });
 };
+
+// Time Spent Automatic Calculation logic 
+function calculateTimeSpent() {
+    const timeReceived = document.getElementById('timeReceived').value;
+    const actedUpon = document.getElementById('actedUpon').value;
+
+    if (timeReceived && actedUpon) {
+        const [hr1, min1, sec1] = timeReceived.split(':').map(Number);
+        const [hr2, min2, sec2] = actedUpon.split(':').map(Number);
+
+        const start = new Date(0, 0, 0, hr1, min1, sec1);
+        const end = new Date(0, 0, 0, hr2, min2, sec2);
+
+        let diff = new Date(end - start);
+        if (end < start) diff = new Date(start - end); // handle negative time
+
+        const hh = String(diff.getUTCHours()).padStart(2, '0');
+        const mm = String(diff.getUTCMinutes()).padStart(2, '0');
+        const ss = String(diff.getUTCSeconds()).padStart(2, '0');
+
+        document.getElementById('timeSpent').value = `${hh}:${mm}:${ss}`;
+    }
+}
+
+document.getElementById('timeReceived').addEventListener('input', calculateTimeSpent);
+document.getElementById('actedUpon').addEventListener('input', calculateTimeSpent);
+
+
+// Save Values Logic 
+document.getElementById('saveBtn').addEventListener('click', () => {
+    if (!workbook) {
+        alert("No spreadsheet file imported.");
+        return;
+    }
+
+    const sheetName = workbook.SheetNames[0]; // Save to first sheet
+    const sheet = workbook.Sheets[sheetName];
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+    // Prepare data
+    const docNo = document.getElementById('documentNo').value;
+    const regNo = document.getElementById('registerNo').value;
+    const phase = document.getElementById('categorySelector').value;
+    const total = document.getElementById('totalReceived').value;
+    const time = document.getElementById('timeReceived').value;
+    const acted = document.getElementById('actedUpon').value;
+    const spent = document.getElementById('timeSpent').value;
+
+    // Define where to save in sheet
+    const headers = jsonData[0]; // assume first row = headers
+    let newRow = [docNo, regNo];
+
+    // Default columns (Document No., Register No.)
+    const phaseIndex = {
+        received: 2,
+        researched: 6,
+        recording: 10,
+        release: 14
+    };
+
+    // Fill empty phase columns
+    for (let i = 0; i < 16; i++) newRow[i] = '';
+
+    newRow[0] = docNo;
+    newRow[1] = regNo;
+
+    const colOffset = phaseIndex[phase];
+    newRow[colOffset] = total;
+    newRow[colOffset + 1] = time;
+    newRow[colOffset + 2] = acted;
+    newRow[colOffset + 3] = spent;
+
+    // Add to sheet
+    jsonData.push(newRow);
+
+    // Write back to worksheet
+    const newSheet = XLSX.utils.aoa_to_sheet(jsonData);
+    workbook.Sheets[sheetName] = newSheet;
+
+    alert("Data saved to workbook in memory.");
+});
+
+// Export Logic fix 
+document.getElementById('downloadBtn').addEventListener('click', function () {
+    if (!workbook) {
+        alert("No workbook loaded.");
+        return;
+    }
+
+    XLSX.writeFile(workbook, 'LCR_Export.xlsx');
+});

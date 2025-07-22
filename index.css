@@ -171,6 +171,7 @@ body, html {
     white-space: nowrap;
     cursor: pointer;
     font-size: 18px;
+    text-decoration: none;
 }
 
 .import-button:hover {
