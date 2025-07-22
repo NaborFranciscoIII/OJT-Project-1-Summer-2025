@@ -1,32 +1,46 @@
-// Import Excel File and Parse It
+// =============================
+// 1. GLOBAL VARIABLES
+// =============================
+let workbook = null;               // Workbook loaded from Excel
+let sheetName = '';                // Active sheet name (usually first)
+let templateFileName = 'template.xlsx';  // Default export name
 
-let workbook = null;
-
-document.querySelector('.import-file').addEventListener('change', function(e) {
+// =============================
+// 2. IMPORT EXCEL TEMPLATE FILE
+// =============================
+document.querySelector('.import-file').addEventListener('change', function (e) {
     const file = e.target.files[0];
-    const reader = new FileReader();
+    templateFileName = file.name;
 
-    reader.onload = function(e) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
         const data = e.target.result;
         workbook = XLSX.read(data, { type: 'binary' });
+
+        sheetName = workbook.SheetNames[0]; // Capture first sheet name
+
+        alert("Template loaded successfully.");
     };
 
     reader.readAsBinaryString(file);
 });
 
-
-// Export to Excel 
+// =============================
+// 3. DOWNLOAD UPDATED WORKBOOK
+// =============================
 document.getElementById('downloadBtn').addEventListener('click', function () {
     if (!workbook) {
         alert("No workbook loaded.");
         return;
     }
 
+    // Export as new file
     XLSX.writeFile(workbook, 'LCR_Export.xlsx');
 });
 
-
-// Function for Icon Active State 
+// =============================
+// 4. ICON NAVBAR ACTIVE STATES
+// =============================
 document.addEventListener('DOMContentLoaded', function () {
     const sectionContainer = document.querySelector('.section-content');
     const sections = document.querySelectorAll('section');
@@ -39,8 +53,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const sectionTop = section.offsetTop;
             const sectionHeight = section.offsetHeight;
 
-            if (sectionContainer.scrollTop >= sectionTop - 100 &&
-                sectionContainer.scrollTop < sectionTop + sectionHeight - 100) {
+            if (
+                sectionContainer.scrollTop >= sectionTop - 100 &&
+                sectionContainer.scrollTop < sectionTop + sectionHeight - 100
+            ) {
                 current = section.getAttribute('id');
             }
         });
@@ -48,11 +64,10 @@ document.addEventListener('DOMContentLoaded', function () {
         navLinks.forEach(link => {
             link.classList.remove('active', 'active-home', 'active-import', 'active-form', 'active-export');
 
-            const href = link.getAttribute('href').substring(1); // remove #
+            const href = link.getAttribute('href').substring(1);
             if (href === current) {
                 link.classList.add('active');
 
-                // Custom active color class
                 switch (href) {
                     case 'home':
                         link.classList.add('active-home');
@@ -72,8 +87,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
-// Clear Button Behavior 
+// =============================
+// 5. CLEAR FORM BUTTON
+// =============================
 document.getElementById('clearBtn').addEventListener('click', () => {
     const inputs = document.querySelectorAll('.form-input');
     inputs.forEach(input => {
@@ -82,24 +98,28 @@ document.getElementById('clearBtn').addEventListener('click', () => {
         }
     });
 
-    // Reset to defaults if needed
+    // Reset defaults
     document.getElementById('documentNo').value = 'LCR-2025-001';
     document.getElementById('registerNo').value = 'REG-145-A';
     document.getElementById('categorySelector').selectedIndex = 0;
     document.getElementById('timeSpent').value = '00:35:12 Automatically Calculated';
 });
 
-
-// Remove File Logic 
+// =============================
+// 6. REMOVE FILE BUTTON
+// =============================
 const fileInput = document.querySelector('.import-file');
 const removeFileBtn = document.getElementById('removeFileBtn');
 
 removeFileBtn.addEventListener('click', function () {
-    fileInput.value = ''; // Clears the selected file
+    fileInput.value = ''; // Reset file input
+    workbook = null;      // Clear workbook reference
+    alert("File removed.");
 });
 
-
-// Time Spent Automatic Calculation logic 
+// =============================
+// 7. CALCULATE TIME SPENT
+// =============================
 function calculateTimeSpent() {
     const timeReceived = document.getElementById('timeReceived').value;
     const actedUpon = document.getElementById('actedUpon').value;
@@ -111,8 +131,8 @@ function calculateTimeSpent() {
         const start = new Date(0, 0, 0, hr1, min1, sec1);
         const end = new Date(0, 0, 0, hr2, min2, sec2);
 
-        let diff = new Date(end - start);
-        if (end < start) diff = new Date(start - end); // handle negative time
+        const diffMs = Math.abs(end - start);
+        const diff = new Date(diffMs);
 
         const hh = String(diff.getUTCHours()).padStart(2, '0');
         const mm = String(diff.getUTCMinutes()).padStart(2, '0');
@@ -125,19 +145,19 @@ function calculateTimeSpent() {
 document.getElementById('timeReceived').addEventListener('input', calculateTimeSpent);
 document.getElementById('actedUpon').addEventListener('input', calculateTimeSpent);
 
-
-// Save Values Logic 
+// =============================
+// 8. SAVE FORM DATA INTO WORKBOOK
+// =============================
 document.getElementById('saveBtn').addEventListener('click', () => {
     if (!workbook) {
         alert("No spreadsheet file imported.");
         return;
     }
 
-    const sheetName = workbook.SheetNames[0]; // Save to first sheet
     const sheet = workbook.Sheets[sheetName];
     const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-    // Prepare data
+    // Get form values
     const docNo = document.getElementById('documentNo').value;
     const regNo = document.getElementById('registerNo').value;
     const phase = document.getElementById('categorySelector').value;
@@ -146,10 +166,14 @@ document.getElementById('saveBtn').addEventListener('click', () => {
     const acted = document.getElementById('actedUpon').value;
     const spent = document.getElementById('timeSpent').value;
 
-    // Define where to save in sheet
-    const headers = jsonData[0]; // assume first row = headers
-    let newRow = new Array(16).fill('');
+    // Validation (optional)
+    if (!docNo || !regNo || !total || !time || !acted || !spent) {
+        alert("Please complete all form fields before saving.");
+        return;
+    }
 
+    // Create row template
+    const newRow = Array(16).fill('');
     newRow[0] = docNo;
     newRow[1] = regNo;
 
@@ -166,12 +190,11 @@ document.getElementById('saveBtn').addEventListener('click', () => {
     newRow[colOffset + 2] = acted;
     newRow[colOffset + 3] = spent;
 
-    // Add to sheet
+    // Append row after headers
     jsonData.push(newRow);
 
-    // Write back to worksheet
-    const newSheet = XLSX.utils.aoa_to_sheet(jsonData);
-    workbook.Sheets[sheetName] = newSheet;
+    // WARNING: This line resets formatting
+    workbook.Sheets[sheetName] = XLSX.utils.aoa_to_sheet(jsonData);
 
-    alert("Data saved to workbook in memory.");
+    alert("Form data saved to workbook.");
 });
